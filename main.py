@@ -11,6 +11,7 @@ class MyClient(discord.Client):
         self.sdk = SdkClient(token)
     
     async def setup_hook(self):
+        print("connecting to ugc gateway")
         self.loop.create_task(self.sdk.connect())
         
     def on(self, name):
