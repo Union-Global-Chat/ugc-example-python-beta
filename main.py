@@ -1,6 +1,6 @@
 import discord
 from sdk import Client as SdkClient
-from orjson import load
+from json import load
 
 
 class MyClient(discord.Client):
