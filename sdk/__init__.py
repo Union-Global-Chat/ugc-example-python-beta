@@ -1,18 +1,41 @@
 from websockets import connect as ws_connect
+import discord
 import asyncio
 import zlib
+import httpx
 import orjson
+
+
+class Error(Exception):
+    pass
     
     
 class Client:
     def __init__(self, token: str):
         self.token = token
         self.on_event = {}
+        self.client = httpx.AsyncClient()
+        
+    async def close(self):
+        await self.client.aclose()
+        await self.ws.close()
         
     async def connect(self):
         self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.ws.recv()
+            
+    async def request(self, method: str, path: str, *args, **kwargs):
+        r = await self.client.request(method, "https://ugc.renorari.net/api/v1/" + path,
+                                  *args, **kwargs)
+        if r.status_code == 404:
+            raise Error("メッセージが見つからない")
+        elif r.status_code == 200:
+            return r.json()
+        elif response.status_code == 401:
+            raise Error("認証エラー")
+        elif response.status_code == 500:
+            raise Error(r.json()["message"])
     
     @property
     def open(self) -> True:
@@ -28,7 +51,7 @@ class Client:
             self.dispatch("message", data["data"])
             
     async def identify(self):
-        await self.send("identify", {"token": self.token})
+        await self.ws_send("identify", {"token": self.token})
         
     def on(self, name: str):
         def deco(coro):
@@ -44,6 +67,9 @@ class Client:
             for coro in self.on_event:
                 asyncio.create_task(coro(*args))
         
-    async def send(self, type: str, data: dict):
+    async def ws_send(self, type: str, data: dict):
         payload = {"type": type, "data": data}
         await self.ws.send(zlib.compress(orjson.dumps(payload)))
+
+    async def send(self, message: discord.Message):
+        await self.request()
