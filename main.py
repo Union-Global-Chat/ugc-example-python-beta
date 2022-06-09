@@ -23,6 +23,10 @@ client = MyClient("", intents=discord.Intents.all())
 async def on_ready():
     print("ready")
     
+@client.on("ready")
+async def ready_for_ugc():
+    print("Ready for ugc")
+    
 @client.event
 async def on_message(message):
     if message.author.bot:
