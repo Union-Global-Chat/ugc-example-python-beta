@@ -35,4 +35,4 @@ async def on_message(message):
             await ch.send(embed=embed)
             await client.sdk.send(message)
 
-client.run(self.config["token"])
+client.run(client.config["token"])
