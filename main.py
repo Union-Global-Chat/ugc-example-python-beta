@@ -37,7 +37,13 @@ async def on_message(message):
         if ch.name == "ugc-test":
             embed = discord.Embed(description=message.content)
             embed.set_author(name=message.author.name, url=getattr(message.author.avatar, "url", None))
-            await ch.send(embed=embed)
+            embeds = [embed]
+            if len(message.attachments) != 0:
+                for attachment in message.attachments:
+                    e = discord.Embed()
+                    e.set_image(url=attachment.url)
+                    embeds.append(e)
+            await ch.send(embeds=embeds)
             await client.sdk.send(message)
 
 client.run(client.config["token"])
