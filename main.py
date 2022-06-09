@@ -33,5 +33,6 @@ async def on_message(message):
             embed = discord.Embed(description=message.content)
             embed.set_author(name=message.author.name, url=getattr(message.author.avatar, "url", None))
             await ch.send(embed=embed)
+            await client.sdk.send(message)
 
 client.run(self.config["token"])
