@@ -16,7 +16,7 @@ class MyClient(discord.Client):
     def on(self, name):
         return self.sdk.on(name)
     
-client = MyClient(intents=discord.Intents.all())
+client = MyClient("", intents=discord.Intents.all())
 
 @client.event
 async def on_ready():
