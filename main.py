@@ -4,11 +4,11 @@ from json import load
 
 
 class MyClient(discord.Client):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, token: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
         with open("config.json", "r") as f:
             self.config = load(f)
-        self.sdk = SdkClient()
+        self.sdk = SdkClient(token)
     
     async def setup_hook(self):
         self.loop.create_task(self.sdk.connect())
