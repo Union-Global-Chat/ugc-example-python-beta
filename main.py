@@ -6,7 +6,7 @@ from json import load
 class MyClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        with open("config.json", "w") as f:
+        with open("config.json", "r") as f:
             self.config = load(f)
         self.sdk = SdkClient()
     
