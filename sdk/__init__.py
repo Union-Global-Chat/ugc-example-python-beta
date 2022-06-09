@@ -26,7 +26,7 @@ class Client:
             await self.ws.recv()
             
     async def request(self, method: str, path: str, *args, **kwargs):
-        r = await self.client.request(method, "https://ugc.renorari.net/api/v1/" + path,
+        r = await self.client.request(method, "https://ugc.renorari.net/api/v1" + path,
                                   *args, **kwargs)
         if r.status_code == 404:
             raise Error("メッセージが見つからない")
@@ -72,4 +72,27 @@ class Client:
         await self.ws.send(zlib.compress(orjson.dumps(payload)))
 
     async def send(self, message: discord.Message):
-        await self.request()
+        payload = {
+            "channel": {
+                "name": message.channel.name,
+                "id": str(message.channel.id)
+            },
+            "author": {
+                "name": message.author.name,
+                "discriminator": message.author.discriminator,
+                "id": str(message.author.id),
+                "avatarURL": getattr(message.author.avatar, "url", None),
+                "bot": message.author.bot
+            },
+            "guild": {
+                "name": message.guild.name,
+                "id": str(message.guild.id),
+                "iconURL": getattr(message.guild.icon, "url", None)
+            },
+            "message": {
+                "content": message.content,
+                "id": str(message.id),
+                "cleanContent": message.clean_content
+            }
+        }
+        await self.request("POST", "/channels", json=payload)
