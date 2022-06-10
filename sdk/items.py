@@ -5,13 +5,14 @@ class Message:
         self.author = User(data["author"])
         self.guild = Guild(data["guild"])
         self.content = data["message"]["content"]
-        
-    
+
+
 class Channel:
     def __init__(self, data: dict):
         self.id = data["id"]
         self.name = data["name"]
-        
+
+
 class User:
     def __init__(self, data: dict):
         self.name = data["username"]
@@ -19,7 +20,8 @@ class User:
         self.discriminator = data["discriminator"]
         self.avatar_url = data["avatarURL"]
         self.bot = data["bot"]
-        
+
+
 class Guild:
     def __init__(self, data: dict):
         self.id = data["id"]

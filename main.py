@@ -14,32 +14,37 @@ class MyClient(discord.Client):
         with open("config.json", "r") as f:
             self.config = load(f)
         self.sdk = SdkClient(self.config["ugc"])
-    
+
     async def setup_hook(self):
         print("connecting to ugc gateway")
         self.loop.create_task(self.sdk.connect())
-        
+
     def on(self, name):
         return self.sdk.on(name)
-    
+
     async def close(self):
         await self.sdk.close()
         await super().close()
-    
+
+
 client = MyClient(intents=discord.Intents.all())
+
 
 @client.event
 async def on_ready():
     print("ready")
-    
+
+
 @client.on("ready")
 async def ready_for_ugc():
     print("Ready for ugc")
-    
+
+
 @client.on("message")
 async def message(message):
     print(message.content)
-    
+
+
 @client.event
 async def on_message(message):
     if message.author.bot:
@@ -52,7 +57,8 @@ async def on_message(message):
         if ch.name == "ugc-test":
             await message.add_reaction("🔄")
             embed = discord.Embed(description=message.content, color=0x07cff7)
-            embed.set_author(name=message.author.name, icon_url=getattr(message.author.avatar, "url", None))
+            embed.set_author(name=message.author.name, icon_url=getattr(
+                message.author.avatar, "url", None))
             embeds = [embed]
             if len(message.attachments) != 0:
                 for attachment in message.attachments:
