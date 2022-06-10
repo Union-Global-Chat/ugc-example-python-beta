@@ -97,4 +97,4 @@ class Client:
                 "cleanContent": message.clean_content
             }
         }
-        await self.request("POST", "/channels", json=payload)
+        print(await self.request("POST", "/channels", json=payload))
