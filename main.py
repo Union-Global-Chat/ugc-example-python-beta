@@ -45,12 +45,12 @@ async def on_message(message):
         if message.channel.id == ch.id:
             continue
         if ch.name == "ugc-test":
-            embed = discord.Embed(description=message.content)
+            embed = discord.Embed(description=message.content, color=0x07cff7)
             embed.set_author(name=message.author.name, icon_url=getattr(message.author.avatar, "url", None))
             embeds = [embed]
             if len(message.attachments) != 0:
                 for attachment in message.attachments:
-                    e = discord.Embed()
+                    e = discord.Embed(color=0x07cff7)
                     e.set_image(url=attachment.url)
                     embeds.append(e)
             await ch.send(embeds=embeds)
