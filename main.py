@@ -22,7 +22,7 @@ class MyClient(discord.Client):
         return self.sdk.on(name)
     
     async def close(self):
-        await sdk.close()
+        await self.sdk.close()
         await super().close()
     
 client = MyClient("", intents=discord.Intents.all())
