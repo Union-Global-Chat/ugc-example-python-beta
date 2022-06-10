@@ -53,7 +53,7 @@ class Client:
             if data["success"]:
                 self.dispatch("ready")
         elif data["type"] == "send":
-            self.dispatch("message", data["data"])
+            self.dispatch("message", Message(data["data"]))
             
     async def identify(self):
         await self.ws_send("identify", {"token": self.token})
