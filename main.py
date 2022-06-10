@@ -8,11 +8,11 @@ except ImportError:
 
 
 class MyClient(discord.Client):
-    def __init__(self, token: str, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         with open("config.json", "r") as f:
             self.config = load(f)
-        self.sdk = SdkClient(token)
+        self.sdk = SdkClient(self.config["ugc"])
     
     async def setup_hook(self):
         print("connecting to ugc gateway")
@@ -25,7 +25,7 @@ class MyClient(discord.Client):
         await self.sdk.close()
         await super().close()
     
-client = MyClient("", intents=discord.Intents.all())
+client = MyClient(intents=discord.Intents.all())
 
 @client.event
 async def on_ready():
