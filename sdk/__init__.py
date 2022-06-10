@@ -83,7 +83,7 @@ class Client:
                 "id": str(message.channel.id)
             },
             "author": {
-                "name": message.author.name,
+                "username": message.author.name,
                 "discriminator": message.author.discriminator,
                 "id": str(message.author.id),
                 "avatarURL": getattr(message.author.avatar, "url", None),
