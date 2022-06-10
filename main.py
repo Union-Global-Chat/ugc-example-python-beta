@@ -46,7 +46,7 @@ async def on_message(message):
             continue
         if ch.name == "ugc-test":
             embed = discord.Embed(description=message.content)
-            embed.set_author(name=message.author.name, url=message.author.avatar.url)
+            embed.set_author(name=message.author.name, icon_url=getattr(message.author.avatar, "url", None))
             embeds = [embed]
             if len(message.attachments) != 0:
                 for attachment in message.attachments:
