@@ -46,7 +46,6 @@ class Client:
         
     async def recv(self):
         data = orjson.loads(zlib.decompress(await self.ws.recv()))
-        print(data)
         if data["type"] == "hello":
             await self.identify()
         elif data["type"] == "identify":
@@ -100,4 +99,4 @@ class Client:
                 "cleanContent": message.clean_content
             }
         }
-        print(await self.request("POST", "/channels", json=payload))
+        await self.request("POST", "/channels", json=payload)
