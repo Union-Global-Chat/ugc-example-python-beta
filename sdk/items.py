@@ -1,6 +1,6 @@
 class Message:
     def __init__(self, data: dict, from_: str):
-        self.from = from_
+        self.where = from_
         self.channel = Channel(data["channel"])
         self.author = User(data["author"])
         self.guild = Guild(data["guild"])
