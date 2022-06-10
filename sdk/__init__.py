@@ -26,6 +26,9 @@ class Client:
             await self.recv()
             
     async def request(self, method: str, path: str, *args, **kwargs):
+        kwargs["headers"] = {
+            "Authorization": "Bearer {}".format(self.token)
+        }
         r = await self.client.request(method, "https://ugc.renorari.net/api/v1" + path,
                                   *args, **kwargs)
         if r.status_code == 404:
