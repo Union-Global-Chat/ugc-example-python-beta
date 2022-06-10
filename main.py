@@ -1,6 +1,10 @@
 import discord
 from sdk import Client as SdkClient
 from json import load
+try:
+    import uvloop
+except ImportError:
+    uvloop.install()
 
 
 class MyClient(discord.Client):
