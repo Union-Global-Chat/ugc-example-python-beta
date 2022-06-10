@@ -1,6 +1,7 @@
 import discord
 from sdk import Client as SdkClient
 from json import load
+import asyncio
 try:
     import uvloop
 except ImportError:
@@ -45,6 +46,7 @@ async def on_message(message):
         if message.channel.id == ch.id:
             continue
         if ch.name == "ugc-test":
+            await message.add_reaction("🔄")
             embed = discord.Embed(description=message.content, color=0x07cff7)
             embed.set_author(name=message.author.name, icon_url=getattr(message.author.avatar, "url", None))
             embeds = [embed]
@@ -55,5 +57,9 @@ async def on_message(message):
                     embeds.append(e)
             await ch.send(embeds=embeds)
             await client.sdk.send(message)
+            await message.remove_reaction("🔄")
+            await message.add_reaction("✅")
+            await asyncio.sleep(3)
+            await message.remove_reaction("✅")
 
 client.run(client.config["token"])
