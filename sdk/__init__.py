@@ -47,7 +47,8 @@ class Client:
         if data["type"] == "hello":
             await self.identify()
         elif data["type"] == "identify":
-            self.dispatch("ready")
+            if data["success"]:
+                self.dispatch("ready")
         elif data["type"] == "send":
             self.dispatch("message", data["data"])
             
@@ -65,7 +66,7 @@ class Client:
     
     def dispatch(self, name: str, *args):
         if name in self.on_event:
-            for coro in self.on_event:
+            for coro in self.on_event[name]:
                 asyncio.create_task(coro(*args))
         
     async def ws_send(self, type: str, data: dict):
