@@ -57,9 +57,9 @@ async def on_message(message):
                     embeds.append(e)
             await ch.send(embeds=embeds)
             await client.sdk.send(message)
-            await message.remove_reaction("🔄")
+            await message.remove_reaction("🔄", client.user)
             await message.add_reaction("✅")
             await asyncio.sleep(3)
-            await message.remove_reaction("✅")
+            await message.remove_reaction("✅", client.user)
 
 client.run(client.config["token"])
