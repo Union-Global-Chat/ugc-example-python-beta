@@ -47,6 +47,7 @@ class Client:
 
     async def recv(self):
         data = orjson.loads(zlib.decompress(await self.ws.recv()))
+        print(data)
         if data["type"] == "hello":
             await self.identify()
         elif data["type"] == "identify":
