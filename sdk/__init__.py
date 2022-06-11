@@ -102,9 +102,9 @@ class Client:
                 "embeds": [],
                 "attachments": [],
                 "reference": { 
-                    "channel_id": null, 
-                    "guild_id": null,
-                    "message_id": null
+                    "channel_id": None, 
+                    "guild_id": None,
+                    "message_id": None
                 }
             }
         }
