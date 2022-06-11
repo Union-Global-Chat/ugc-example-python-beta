@@ -51,7 +51,7 @@ async def ready_for_ugc():
 
 @client.on("message")
 async def message(message):
-    if message.where == str(client.user.id):
+    if message.source == str(client.user.id):
         return
     if message.author.bot:
         return
