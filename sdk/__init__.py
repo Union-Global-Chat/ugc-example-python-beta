@@ -64,7 +64,7 @@ class Client:
                 self.dispatch("ready")
         elif data["type"] == "message":
             self.dispatch("message", Message(
-                data["data"]["source"], data["data"]["source"]))
+                data["data"]["data"], data["data"]["source"]))
         elif data["type"] == "heartbeat":
             self._heartbeat = time() - data["data"]["unix_time"]
 
