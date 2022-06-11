@@ -39,7 +39,7 @@ async def on_ready():
     await tree.sync()
 
     
-@tree.command("ping")
+@tree.command(description="Pong")
 async def ping(interaction):
     await interaction.response.send_message(client.sdk.latency)
 
