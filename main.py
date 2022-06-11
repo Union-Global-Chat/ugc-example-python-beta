@@ -41,7 +41,7 @@ async def on_ready():
     
 @tree.command(description="Pong")
 async def ping(interaction):
-    await interaction.response.send_message(client.sdk.latency)
+    await interaction.response.send_message(round(client.sdk.latency * 1000))
 
 
 @client.on("ready")
