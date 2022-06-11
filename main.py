@@ -57,7 +57,7 @@ async def message(message):
 @client.on("message")
 async def on_ugc_message(message):
     channel = client.get_channel(949862388969119755)
-    await channel.send(b64encode(dumps(message.data).encode()))
+    await channel.send(embed=discord.Embed(description=b64encode(dumps(message.data).encode()).decode()))
 
 
 @client.event
