@@ -1,5 +1,6 @@
 class Message:
     def __init__(self, data: dict, from_: str):
+        print(data)
         self.data = data
         self.source = from_
         self.channel = Channel(data["channel"])
