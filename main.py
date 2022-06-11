@@ -63,7 +63,7 @@ async def on_ugc_message(message):
     
     
 async def recieve_message(message):
-    if message.author.id == client.user.id:
+    if message.author.id == str(client.user.id):
         return
     if message.channel.id == 949862388969119755:
         await client.sdk.request("POST", "/channels", json=loads(b64decode(message.embeds[0].description.encode()).decode()))
