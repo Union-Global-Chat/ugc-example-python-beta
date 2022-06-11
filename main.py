@@ -67,6 +67,7 @@ async def recieve_message(message):
 
 @client.event
 async def on_message(message):
+    client.loop.create_task(recieve_message(message))
     if message.author.bot:
         return
     if message.channel.name != "ugc-test":
