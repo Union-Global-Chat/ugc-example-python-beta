@@ -1,4 +1,5 @@
 from websockets import connect as ws_connect
+from time import time
 from .items import *
 import discord
 import asyncio
