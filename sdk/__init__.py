@@ -100,7 +100,12 @@ class Client:
                 "id": str(message.id),
                 "cleanContent": message.clean_content,
                 "embeds": [],
-                "attachments": []
+                "attachments": [],
+                "reference": { 
+                    "channel_id": null, 
+                    "guild_id": null,
+                    "message_id": null
+                }
             }
         }
         await self.request("POST", "/channels", json=payload)
