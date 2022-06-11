@@ -100,7 +100,16 @@ class Client:
                 "id": str(message.id),
                 "cleanContent": message.clean_content,
                 "embeds": [],
-                "attachments": [],
+                "attachments": [
+                    {
+                        "url": attachment.url,
+                        "name": attachment.filename,
+                        "width": str(attachment.width),
+                        "height": str(attachment.height),
+                        "content_type": attachement.content_type
+                    }
+                    for attachment in message.attachements
+                ],
                 "reference": { 
                     "channel_id": None, 
                     "guild_id": None,
