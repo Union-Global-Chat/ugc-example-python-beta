@@ -106,9 +106,9 @@ class Client:
                         "name": attachment.filename,
                         "width": str(attachment.width),
                         "height": str(attachment.height),
-                        "content_type": attachement.content_type
+                        "content_type": attachment.content_type
                     }
-                    for attachment in message.attachements
+                    for attachment in message.attachments
                 ],
                 "reference": { 
                     "channel_id": None, 
