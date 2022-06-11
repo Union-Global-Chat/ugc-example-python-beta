@@ -1,6 +1,7 @@
 import discord
 from sdk import Client as SdkClient
-from json import load
+from base64 import b64encode
+from json import load, dumps
 import asyncio
 try:
     import uvloop
@@ -51,6 +52,12 @@ async def message(message):
             embed = discord.Embed(description=message.content, color=0x07cff7)
             embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
             await ch.send(embed=embed)
+            
+            
+@client.on("message")
+async def on_ugc_message(message):
+    channel = client.get_channel(949862388969119755)
+    await channel.send(b64encode(dumps(message.data).encode()))
 
 
 @client.event
