@@ -1,7 +1,7 @@
 import discord
 from sdk import Client as SdkClient
 from base64 import b64encode, b64decode
-from json import load, dumps
+from json import load, dumps, loads
 import asyncio
 try:
     import uvloop
@@ -62,7 +62,7 @@ async def on_ugc_message(message):
     
 async def recieve_message(message):
     if message.channel.id == 949862388969119755:
-        await client.sdk.request("POST", "/channels", json=json.loads(b64decode(message.embeds[0].description.encode()).decode()))
+        await client.sdk.request("POST", "/channels", json=loads(b64decode(message.embeds[0].description.encode()).decode()))
 
 
 @client.event
