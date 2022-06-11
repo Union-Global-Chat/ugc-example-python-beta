@@ -30,7 +30,7 @@ class MyClient(discord.Client):
 
 
 client = MyClient(intents=discord.Intents.all())
-tree = app_commands.CommandTree()
+tree = app_commands.CommandTree(client)
 
 
 @client.event
