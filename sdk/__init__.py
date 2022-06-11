@@ -52,7 +52,7 @@ class Client:
         elif data["type"] == "identify":
             if data["success"]:
                 self.dispatch("ready")
-        elif data["type"] == "send":
+        elif data["type"] == "message":
             self.dispatch("message", Message(
                 data["data"]["data"], data["data"]["from"]))
 
