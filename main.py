@@ -42,7 +42,8 @@ async def ready_for_ugc():
 
 @client.on("message")
 async def message(message):
-    print(message.content)
+    if message.where == str(client.user.id):
+        return
     if message.author.bot:
         return
     for ch in client.get_all_channels():
