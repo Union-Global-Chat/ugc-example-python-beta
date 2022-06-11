@@ -44,6 +44,10 @@ class Client:
     @property
     def open(self) -> True:
         return self.ws.open
+    
+    @property
+    def latency(self):
+        return self._heartbeat
 
     async def recv(self):
         data = orjson.loads(zlib.decompress(await self.ws.recv()))
@@ -56,6 +60,8 @@ class Client:
         elif data["type"] == "message":
             self.dispatch("message", Message(
                 data["data"]["data"], data["data"]["from"]))
+        elif data["type"] == "heartbeat":
+            self._heartbeat = time() - data["data"]["unix_time"]
 
     async def identify(self):
         await self.ws_send("identify", {"token": self.token})
