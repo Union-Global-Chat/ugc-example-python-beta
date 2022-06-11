@@ -43,7 +43,7 @@ class Client:
             return r.json()
         elif r.status_code == 401:
             raise Error("認証エラー")
-        elif r.status_code == 500:
+        elif r.status_code == 400:
             raise Error(r.json()["message"])
 
     @property
@@ -129,4 +129,4 @@ class Client:
                 }
             }
         }
-        await self.request("POST", "/channels", json=payload)
+        await self.request("POST", "/messages", json=payload)
