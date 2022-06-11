@@ -36,9 +36,9 @@ class Client:
             raise Error("メッセージが見つからない")
         elif r.status_code == 200:
             return r.json()
-        elif response.status_code == 401:
+        elif r.status_code == 401:
             raise Error("認証エラー")
-        elif response.status_code == 500:
+        elif r.status_code == 500:
             raise Error(r.json()["message"])
 
     @property
