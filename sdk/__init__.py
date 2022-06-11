@@ -98,7 +98,9 @@ class Client:
             "message": {
                 "content": message.content,
                 "id": str(message.id),
-                "cleanContent": message.clean_content
+                "cleanContent": message.clean_content,
+                "embeds": [],
+                "attachments": []
             }
         }
         await self.request("POST", "/channels", json=payload)
