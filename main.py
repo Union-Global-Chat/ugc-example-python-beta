@@ -43,6 +43,13 @@ async def ready_for_ugc():
 @client.on("message")
 async def message(message):
     print(message.content)
+    if message.author.bot:
+        return
+    for ch in client.get_all_channels():
+        if ch.name == "ugc-test":
+            embed = discord.Embed(description=message.content, color=0x07cff7)
+            embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+            await ch.send(embed=embed)
 
 
 @client.event
