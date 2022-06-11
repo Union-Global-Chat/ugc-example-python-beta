@@ -53,7 +53,8 @@ async def message(message):
             embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
             await ch.send(embed=embed)
             
-            
+  
+"""
 @client.on("message")
 async def on_ugc_message(message):
     if message.where == str(client.user.id):
@@ -67,6 +68,7 @@ async def recieve_message(message):
         return
     if message.channel.id == 949862388969119755:
         await client.sdk.request("POST", "/channels", json=loads(b64decode(message.embeds[0].description.encode()).decode()))
+"""
 
 
 @client.event
