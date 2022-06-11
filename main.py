@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from sdk import Client as SdkClient
 from base64 import b64encode, b64decode
 from json import load, dumps, loads
@@ -29,11 +30,18 @@ class MyClient(discord.Client):
 
 
 client = MyClient(intents=discord.Intents.all())
+tree = app_commands.CommandTree()
 
 
 @client.event
 async def on_ready():
     print("ready")
+    await tree.sync()
+
+    
+@tree.command("ping")
+async def ping(interaction):
+    await interaction.response.send_message(client.sdk.latency)
 
 
 @client.on("ready")
