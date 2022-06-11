@@ -67,7 +67,7 @@ async def recieve_message(message):
 
 @client.event
 async def on_message(message):
-    await recieve_message(message))
+    await recieve_message(message)
     if message.author.bot:
         return
     if message.channel.name != "ugc-test":
