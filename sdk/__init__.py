@@ -21,15 +21,13 @@ class Client:
     async def close(self):
         await self.client.aclose()
         await self.ws.close()
-        self._closed = True
 
     async def connect(self):
         self._closed = False
         self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.recv()
-        if not self._closed:
-            await super().connect()
+        await super().connect()
 
     async def request(self, method: str, path: str, *args, **kwargs):
         kwargs["headers"] = {
