@@ -34,6 +34,7 @@ async def on_ready():
     print("ready")
     await tree.sync()
     await client.sdk.connect()
+    await client.sdk.reconnect()
 
     
 @tree.command(description="Pong")
