@@ -26,14 +26,18 @@ class Client:
         self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.recv()
+        await self.reconnect()
             
     async def reconnect(self):
         while True:
             try:
+                print("Reconnecting...")
                 await self.connect()
             except Exception:
+                print("Try after 10 seconds")
                 await asyncio.sleep(10)
             else:
+                print("Reconnected")
                 break
 
     async def request(self, method: str, path: str, *args, **kwargs):
