@@ -17,10 +17,6 @@ class MyClient(discord.Client):
             self.config = load(f)
         self.sdk = SdkClient(self.config["ugc"])
 
-    async def setup_hook(self):
-        print("connecting to ugc gateway")
-        self.loop.create_task(self.sdk.connect())
-
     def on(self, name):
         return self.sdk.on(name)
 
@@ -37,6 +33,7 @@ tree = app_commands.CommandTree(client)
 async def on_ready():
     print("ready")
     await tree.sync()
+    await client.sdk.connect()
 
     
 @tree.command(description="Pong")
