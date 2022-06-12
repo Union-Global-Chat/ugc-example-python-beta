@@ -1,4 +1,4 @@
-from websockets import connect as ws_connect
+from websockets import connect, exceptions
 from time import time
 from .items import *
 import discord
@@ -19,25 +19,14 @@ class Client:
         self.client = httpx.AsyncClient()
 
     async def close(self):
+        self.ws = None
         await self.client.aclose()
         await self.ws.close()
 
     async def connect(self):
-        self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
+        self.ws = await connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.recv()
- 
-    async def reconnect(self):
-        while True:
-            try:
-                print("Reconnecting...")
-                await self.connect()
-            except Exception:
-                print("Try after 10 seconds")
-                await asyncio.sleep(10)
-            else:
-                print("Reconnected")
-                break
 
     async def request(self, method: str, path: str, *args, **kwargs):
         kwargs["headers"] = {
@@ -61,20 +50,29 @@ class Client:
     @property
     def latency(self):
         return self._heartbeat
+    
+    async def on_close(self):
+        self.dispatch("close")
+        await asyncio.sleep(5)
+        self.ws = None
+        await self.connect()
 
     async def recv(self):
-        data = orjson.loads(zlib.decompress(await self.ws.recv()))
-        print(data)
-        if data["type"] == "hello":
-            await self.identify()
-        elif data["type"] == "identify":
-            if data["success"]:
-                self.dispatch("ready")
-        elif data["type"] == "message":
-            self.dispatch("message", Message(
-                data["data"]["data"], data["data"]["source"]))
-        elif data["type"] == "heartbeat":
-            self._heartbeat = time() - data["data"]["unix_time"]
+        try:
+            data = orjson.loads(zlib.decompress(await self.ws.recv()))
+        except exceptions.ConnectionClosed:
+            await self.on_close()
+        else:
+            if data["type"] == "hello":
+                await self.identify()
+            elif data["type"] == "identify":
+                if data["success"]:
+                    self.dispatch("ready")
+            elif data["type"] == "message":
+                self.dispatch("message", Message(
+                    data["data"]["data"], data["data"]["source"]))
+            elif data["type"] == "heartbeat":
+                self._heartbeat = time() - data["data"]["unix_time"]
 
     async def identify(self):
         await self.ws_send("identify", {"token": self.token})
