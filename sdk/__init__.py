@@ -26,6 +26,7 @@ class Client:
         self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.recv()
+        print("Reconnecting task start")
         await self.reconnect()
             
     async def reconnect(self):
