@@ -27,7 +27,7 @@ class Client:
         self.ws = await ws_connect("wss://ugc.renorari.net/api/v1/gateway")
         while self.open:
             await self.recv()
-        await super().connect()
+        await self.connect()
 
     async def request(self, method: str, path: str, *args, **kwargs):
         kwargs["headers"] = {
