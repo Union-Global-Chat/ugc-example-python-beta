@@ -24,7 +24,7 @@ class Client:
         await self.ws.close()
 
     async def connect(self):
-        self.ws = await connect("wss://ugc.renorari.net/api/v1/gateway")
+        self.ws = await connect("wss://ugc.renorari.net/api/v2/gateway")
         while self.open:
             await self.recv()
 
@@ -32,7 +32,7 @@ class Client:
         kwargs["headers"] = {
             "Authorization": "Bearer {}".format(self.token)
         }
-        r = await self.client.request(method, "https://ugc.renorari.net/api/v1" + path,
+        r = await self.client.request(method, "https://ugc.renorari.net/api/v2" + path,
                                       *args, **kwargs)
         if r.status_code == 404:
             raise Error("メッセージが見つからない")
