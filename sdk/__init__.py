@@ -16,7 +16,7 @@ class Client:
     def __init__(self, token: str):
         self.token = token
         self.on_event = {}
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(base_url="https://ugc.renorari.net/api/v2")
 
     async def close(self):
         self.ws = None
@@ -32,10 +32,9 @@ class Client:
         kwargs["headers"] = {
             "Authorization": "Bearer {}".format(self.token)
         }
-        r = await self.client.request(method, "https://ugc.renorari.net/api/v2" + path,
-                                      *args, **kwargs)
+        r = await self.client.request(method, path, *args, **kwargs)
         if r.status_code == 404:
-            raise Error("メッセージが見つからない")
+            raise Error("404エラー")
         elif r.status_code == 200:
             return r.json()
         elif r.status_code == 401:
