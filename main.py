@@ -54,13 +54,13 @@ def json_load(path) -> dict:
                         description="グローバルチャットを作成します。すでに作成されている場合はできません。")
 @app_commands.checks.has_permissions(manage_channels=True)
 async def gc_join(ctx):
-    load = json_load("./data/json/global.json")
+    load = json_load("global.json")
 
     try:
         load[str(ctx.guild.id)]
         del load[str(ctx.guild.id)]
 
-        with open("./data/json/global.json", "w") as f1:
+        with open("global.json", "w") as f1:
             json.dump(load, f1, ensure_ascii=False, indent=4)
 
         embed = discord.Embed(title="登録を解除しました。",
@@ -73,7 +73,7 @@ async def gc_join(ctx):
 
         load[str(ctx.guild.id)] = {"url": webhook_url.url, "channel": ctx.channel.id}
 
-        with open("./data/json/global.json", "w", encoding="utf-8") as f1:
+        with open("global.json", "w", encoding="utf-8") as f1:
             json.dump(load, f1, ensure_ascii=False, indent=4)
 
         embed = discord.Embed(title="グローバルチャットに接続しました。",
@@ -108,7 +108,7 @@ async def message(message : Message):
     if message.author.bot:
         return
 
-    load = json_load("data/json/global.json")
+    load = json_load("global.json")
 
     embeds = []
     if message.attachments != []:
@@ -129,7 +129,7 @@ async def message(message : Message):
                 webhook = await ch.create_webhook(name="Global")
                 load[str(message.guild.id)] = {"url": webhook.url, "channel": message.channel.id}
 
-                with open("./data/json/global.json", "w", encoding="utf-8") as f1:
+                with open("global.json", "w", encoding="utf-8") as f1:
                     json.dump(load, f1, ensure_ascii=False, indent=4)
 
             await webhook.send(message.content,
@@ -146,7 +146,7 @@ async def gc_msg(message : discord.Message):
     if message.guild is None:
         return
 
-    load : dict = json_load("data/json/global.json")
+    load : dict = json_load("global.json")
     guild_data = load.get(str(message.guild.id))
 
     if guild_data is not None:
@@ -180,7 +180,7 @@ async def gc_msg(message : discord.Message):
                         webhook = await message.channel.create_webhook(name="Global")
                         load[str(message.guild.id)] = {"url": webhook.url, "channel": message.channel.id}
 
-                        with open("./data/json/global.json", "w", encoding="utf-8") as f1:
+                        with open("global.json", "w", encoding="utf-8") as f1:
                             json.dump(load, f1, ensure_ascii=False, indent=4)
 
                     await webhook.send(message.content,
