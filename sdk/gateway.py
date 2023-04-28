@@ -5,7 +5,6 @@ from websockets import client
 from websockets.exceptions import ConnectionClosed
 from .items import Message
 
-
 import aiohttp
 
 try:
@@ -14,10 +13,8 @@ except ImportError:
     import json
 import zlib
 
-
 gateway_url = "wss://ugc.renorari.net/api/v2/gateway"
 message_url = "https://ugc.renorari.net/api/v2/messages"
-
 
 
 class Error(Exception):
@@ -25,6 +22,7 @@ class Error(Exception):
 
 
 class Client:
+
     def __init__(self, token: str):
         self.token = token
         self.on_event = {}
@@ -41,13 +39,15 @@ class Client:
             while self.open:
                 await self.recv()
 
-
     async def request(self, json_data):
-        json_data["headers"] = {"Authorization": "Bearer {}".format(self.token),
-                                "Content-Type": "application/json"}
+        json_data["headers"] = {
+            "Authorization": "Bearer {}".format(self.token),
+            "Content-Type": "application/json"
+        }
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(message_url, data = json.dumps(json_data)) as r:
+            async with session.post(message_url,
+                                    data=json.dumps(json_data)) as r:
                 print(r.status)
                 if r.status == 404:
                     raise Error("404エラー")
@@ -58,19 +58,20 @@ class Client:
                 elif r.status == 400:
                     raise Error(r.json()["message"])
 
-
-    async def send_message(self, message : discord.Message):
+    async def send_message(self, message: discord.Message):
         message = json.dumps(self.discord_message_to_ugc_message(message))
-        header = {"Authorization": "Bearer {}".format(self.token),
-                  "Content-Type": "application/json"}
+        header = {
+            "Authorization": "Bearer {}".format(self.token),
+            "Content-Type": "application/json"
+        }
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(message_url, data = message, headers = header) as r:
+            async with session.post(message_url, data=message,
+                                    headers=header) as r:
                 if r.status == 200:
                     return await r.json()
                 else:
                     print(r.status)
-
 
     @property
     def open(self) -> bool:
@@ -100,43 +101,42 @@ class Client:
                 if data["success"]:
                     self.dispatch("ready")
             elif data["type"] == "message":
-                self.dispatch("message", Message(
-                    data["data"]["data"], data["data"]["source"]))
+                self.dispatch(
+                    "message",
+                    Message(data["data"]["data"], data["data"]["source"]))
             elif data["type"] == "heartbeat":
                 self._heartbeat = time.time() - data["data"]["unix_time"]
 
     async def identify(self):
         await self.ws_send("identify", {"token": self.token})
 
-
     def on(self, name: str):
+
         def deco(coro):
             if name in self.on_event:
                 self.on_event[name].append(coro)
             else:
                 self.on_event[name] = [coro]
             return coro
-        return deco
 
+        return deco
 
     def dispatch(self, name: str, *args):
         if name in self.on_event:
             for coro in self.on_event[name]:
                 asyncio.create_task(coro(*args))
 
-
     async def ws_send(self, type: str, data: dict):
         payload = {"type": type, "data": data}
         await self.ws.send(zlib.compress(json.dumps(payload)))
 
-
-    def discord_message_to_ugc_message(self, message : discord.Message):
+    def discord_message_to_ugc_message(self, message: discord.Message):
         attachments = []
         for attachment in message.attachments:
 
             attachments_dict = {
-                "url" : attachment.url,
-                "name" : attachment.filename,
+                "url": attachment.url,
+                "name": attachment.filename,
                 "width": str(attachment.width),
                 "height": str(attachment.height),
                 "content_type": attachment.content_type
