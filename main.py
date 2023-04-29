@@ -7,7 +7,7 @@ import json
 import re
 import aiohttp
 
-bot = commands.Bot(intents=discord.Intents.all())
+bot = commands.Bot(intents=discord.Intents.all(), command_prefix="!.", help_command=None)
 
 sdk = Client("token here")
 
@@ -73,7 +73,7 @@ async def gc_join(ctx):
         embed = discord.Embed(title="登録を解除しました。",
                               description="Webhookは手動で削除してください。",
                               colour=discord.Colour.red())
-        await ctx.respond(embed=embed)
+        await ctx.response.send_message(embed=embed)
 
     except KeyError:
         webhook_url = await ctx.channel.create_webhook(name="Global")
@@ -88,12 +88,12 @@ async def gc_join(ctx):
 
         embed = discord.Embed(title="グローバルチャットに接続しました。",
                               colour=discord.Colour.green())
-        await ctx.respond(embed=embed)
+        await ctx.response.send_message(embed=embed)
 
         await asyncio.sleep(5)
 
         for v in load.values():
-            async with aiohttp.botSession() as session:
+            async with aiohttp.ClientSession() as session:
                 webhook: Webhook = Webhook.from_url(url=v["url"],
                                                     session=session)
 
@@ -103,10 +103,10 @@ async def gc_join(ctx):
                     username="[SYSTEM]")
 
 
-@commands.Cog.listener(name="on_ready")
-async def ugc_connect():
-    await bot.tree.sync()
+@bot.event
+async def on_ready():
     print("UGCへの接続を開始します...")
+    await bot.tree.sync()
     await sdk.connect()
 
 
@@ -133,8 +133,8 @@ async def message(message: Message):
 
             embeds.append(embed)
 
-    for k, v in load.items():
-        async with aiohttp.botSession() as session:
+    for v in load.values():
+        async with aiohttp.ClientSession() as session:
             try:
                 webhook: Webhook = Webhook.from_url(url=v["url"],
                                                     session=session)
@@ -157,8 +157,8 @@ async def message(message: Message):
                                embeds=embeds)
 
 
-@commands.Cog.listener(name="on_message")
-async def gc_msg(message: discord.Message):
+@bot.event
+async def on_message(message: discord.Message):
     if message.author.bot:  # BOTの場合は何もせず終了
         return
 
@@ -216,4 +216,4 @@ async def gc_msg(message: discord.Message):
             await message.add_reaction("✅")
 
 
-bot.run(bot.config["token"])
+bot.run("token here")
